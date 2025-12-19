@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="es" class="scroll-smooth">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -12,7 +13,7 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <!-- AOS Animation Library -->
     <link href="https://unpkg.com/aos@2.3.1/dist/aos.css" rel="stylesheet">
-    
+
     <script>
         tailwind.config = {
             darkMode: 'class',
@@ -31,6 +32,7 @@
                     animation: {
                         'scroll-left': 'scrollLeft 40s linear infinite',
                         'blob': 'blob 10s infinite',
+                        'fade-in-up': 'fadeInUp 0.8s ease-out forwards',
                     },
                     keyframes: {
                         scrollLeft: {
@@ -42,6 +44,10 @@
                             '33%': { transform: 'translate(30px, -30px) scale(1.1)' },
                             '66%': { transform: 'translate(-20px, 20px) scale(0.9)' },
                             '100%': { transform: 'translate(0px, 0px) scale(1)' },
+                        },
+                        fadeInUp: {
+                            '0%': { opacity: '0', transform: 'translateY(20px)' },
+                            '100%': { opacity: '1', transform: 'translateY(0)' },
                         }
                     }
                 }
@@ -50,7 +56,12 @@
     </script>
     <style>
         @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700&display=swap');
-        
+
+        /* Utility for pausing animation */
+        .pause {
+            animation-play-state: paused;
+        }
+
         body {
             font-family: 'Inter', sans-serif;
             overflow-x: hidden;
@@ -77,70 +88,76 @@
             width: 100%;
             overflow: hidden;
             position: relative;
-            padding: 2rem 0;
-            background: rgba(255, 255, 255, 0.4);
-            backdrop-filter: blur(6px);
+            padding: 3rem 0;
+            background: rgba(255, 255, 255, 0.3);
+            backdrop-filter: blur(8px);
             border-top: 1px solid rgba(200, 200, 200, 0.2);
             border-bottom: 1px solid rgba(200, 200, 200, 0.2);
             margin: 2rem 0;
         }
-        
+
         .dark .carousel-strip {
-             background: rgba(15, 23, 42, 0.4);
-             border-color: rgba(255, 255, 255, 0.05);
+            background: rgba(15, 23, 42, 0.4);
+            border-color: rgba(255, 255, 255, 0.05);
         }
 
         .carousel-track {
             display: flex;
             width: max-content;
-            gap: 2rem; /* Gap más pequeño para móvil */
+            gap: 3rem;
+            /* Espacio entre iconos */
         }
-        
+
         @media (min-width: 768px) {
             .carousel-track {
-                gap: 4rem; /* Gap normal para PC */
+                gap: 5rem;
             }
         }
 
-        /* Tarjeta de Habilidad en Carrusel (SIN HOVER ANIMADO) */
+        /* Tarjeta de Habilidad en Carrusel (Estática, sin hover interactivo) */
         .tech-card {
-            /* Tamaño Responsivo: 90px en móvil, 160px en PC */
-            min-width: 90px;
-            height: 90px;
+            min-width: 100px;
+            height: 100px;
             display: flex;
             flex-direction: column;
             align-items: center;
             justify-content: center;
-            border-radius: 1rem;
-            /* Borde fijo */
-            border: 1px solid rgba(255,255,255,0.2); 
-            background: rgba(255,255,255,0.2);
+            border-radius: 1.5rem;
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            background: rgba(255, 255, 255, 0.15);
         }
-        
+
         .dark .tech-card {
             background: rgba(30, 41, 59, 0.3);
-            border-color: rgba(255,255,255,0.05);
+            border-color: rgba(255, 255, 255, 0.05);
         }
 
         @media (min-width: 768px) {
             .tech-card {
-                min-width: 140px;
-                height: 140px;
+                min-width: 150px;
+                height: 150px;
             }
         }
 
         /* Foto de perfil */
         .profile-image-container {
             position: relative;
-            width: 160px;
-            height: 160px;
+            width: 180px;
+            height: 180px;
             border-radius: 50%;
             padding: 4px;
             background: linear-gradient(to right, #3b82f6, #10b981);
             margin: 0 auto;
-            box-shadow: 0 10px 25px rgba(0,0,0,0.2);
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.2);
+            transition: all 0.5s ease;
         }
-        
+
+        .profile-image-container:hover {
+            transform: scale(1.05) translateY(-5px);
+            box-shadow: 0 20px 30px rgba(59, 130, 246, 0.3);
+            border-color: #3b82f6;
+        }
+
         @media (min-width: 1024px) {
             .profile-image-container {
                 width: 250px;
@@ -155,6 +172,7 @@
             object-fit: cover;
             border: 4px solid white;
         }
+
         .dark .profile-image {
             border: 4px solid #1e293b;
         }
@@ -168,82 +186,141 @@
             z-index: 99;
             transition: opacity 0.3s;
         }
+
+        /* Liquid Fill Hover Effect */
+        .liquid-hover {
+            position: relative;
+            overflow: hidden;
+            z-index: 1;
+            transition: all 0.3s ease;
+        }
+
+        .liquid-hover::before {
+            content: "";
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            width: 100%;
+            height: 0%;
+            background: #3b82f6;
+            /* Secondary color */
+            transition: all 0.4s ease-in-out;
+            z-index: -1;
+            border-radius: 0.75rem;
+        }
+
+        .liquid-hover:hover::before {
+            height: 100%;
+        }
+
+        .liquid-hover:hover h5,
+        .liquid-hover:hover span,
+        .liquid-hover:hover i {
+            color: white !important;
+            transition: color 0.3s ease;
+        }
+
+        .liquid-hover:hover .icon-bg {
+            background: rgba(255, 255, 255, 0.2) !important;
+        }
     </style>
 </head>
+
 <body class="bg-lightbg text-slate-800 dark:bg-primary dark:text-slate-100 flex flex-col min-h-screen relative">
 
     <!-- Background Blobs -->
     <div class="fixed inset-0 w-full h-full overflow-hidden -z-10 pointer-events-none">
-        <div class="absolute top-0 left-1/4 w-64 md:w-96 h-64 md:h-96 bg-blue-500/10 rounded-full mix-blend-multiply filter blur-3xl animate-blob"></div>
-        <div class="absolute bottom-0 right-1/4 w-64 md:w-96 h-64 md:h-96 bg-emerald-500/10 rounded-full mix-blend-multiply filter blur-3xl animate-blob animation-delay-2000"></div>
+        <div
+            class="absolute top-0 left-1/4 w-96 h-96 bg-blue-500/10 rounded-full mix-blend-multiply filter blur-3xl animate-blob">
+        </div>
+        <div
+            class="absolute bottom-0 right-1/4 w-96 h-96 bg-emerald-500/10 rounded-full mix-blend-multiply filter blur-3xl animate-blob animation-delay-2000">
+        </div>
     </div>
 
     <!-- Navigation -->
-    <nav class="w-full p-4 flex justify-end container mx-auto fixed top-0 left-0 right-0 z-50 bg-lightbg/90 dark:bg-primary/90 backdrop-blur-md shadow-sm transition-colors duration-300">
-        <button id="theme-toggle" class="p-2 rounded-full hover:bg-gray-200 dark:hover:bg-slate-700 transition-colors shadow-sm" aria-label="Cambiar tema">
+    <nav
+        class="w-full p-4 flex justify-end fixed top-0 left-0 right-0 z-50 bg-lightbg/90 dark:bg-primary/90 backdrop-blur-md shadow-sm transition-colors duration-300">
+        <button id="theme-toggle"
+            class="p-2 rounded-full hover:bg-gray-200 dark:hover:bg-slate-700 transition-colors shadow-sm"
+            aria-label="Cambiar tema">
             <i class="fas fa-moon text-xl dark:hidden text-slate-700"></i>
             <i class="fas fa-sun text-xl hidden dark:inline text-yellow-400"></i>
         </button>
     </nav>
 
     <!-- Hero Section -->
-    <header class="container mx-auto px-6 pt-28 pb-10 md:pt-36 flex flex-col lg:flex-row items-center gap-12 mt-8 relative z-10">
-        
+    <header
+        class="container mx-auto px-6 pt-28 pb-10 md:pt-36 flex flex-col lg:flex-row items-center gap-12 mt-8 relative z-10">
+
         <!-- Columna Izquierda: Info Personal -->
-        <div class="lg:w-1/2 flex flex-col items-center lg:items-start text-center lg:text-left space-y-6 w-full" data-aos="fade-right">
-            
+        <div class="lg:w-1/2 flex flex-col items-center lg:items-start text-center lg:text-left space-y-6 w-full"
+            data-aos="fade-right">
+
             <!-- Foto visible arriba en móvil -->
             <div class="lg:hidden profile-image-container shadow-lg mb-4">
                 <img src="perfil.jpg" alt="Andres Peña" class="profile-image">
             </div>
 
-            <div class="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-emerald-100 text-emerald-800 dark:bg-emerald-900/50 dark:text-emerald-300 text-xs md:text-sm font-bold border border-emerald-200 dark:border-emerald-800 shadow-sm">
+            <div
+                class="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-emerald-100 text-emerald-800 dark:bg-emerald-900/50 dark:text-emerald-300 text-xs md:text-sm font-bold border border-emerald-200 dark:border-emerald-800 shadow-sm">
                 <span class="relative flex h-3 w-3">
-                  <span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-emerald-400 opacity-75"></span>
-                  <span class="relative inline-flex rounded-full h-3 w-3 bg-emerald-500"></span>
+                    <span
+                        class="animate-ping absolute inline-flex h-full w-full rounded-full bg-emerald-400 opacity-75"></span>
+                    <span class="relative inline-flex rounded-full h-3 w-3 bg-emerald-500"></span>
                 </span>
                 Disponible para Contrato de Aprendizaje
             </div>
-            
+
             <div>
-                <h1 class="text-4xl md:text-6xl lg:text-7xl font-extrabold text-slate-800 dark:text-white leading-tight mb-2 tracking-tight">
+                <h1
+                    class="text-4xl md:text-6xl lg:text-7xl font-extrabold text-slate-800 dark:text-white leading-tight mb-2 tracking-tight">
                     Andres Orlando<br><span class="text-secondary">Peña Guzman</span>
                 </h1>
                 <h2 class="text-xl md:text-3xl text-slate-500 dark:text-slate-400 font-semibold">
                     Desarrollador Jr. Full-Stack
                 </h2>
             </div>
-            
-            <div class="text-base md:text-lg text-slate-600 dark:text-slate-300 space-y-4 leading-relaxed text-justify lg:text-left glass p-6 md:p-8 rounded-2xl border-l-4 border-secondary shadow-sm w-full">
+
+            <div
+                class="text-base md:text-lg text-slate-600 dark:text-slate-300 space-y-4 leading-relaxed text-justify lg:text-left glass p-6 md:p-8 rounded-2xl border-l-4 border-secondary shadow-sm w-full">
                 <p>
-                    Desarrollador de software en formación en <strong>Tecnólogo en Análisis y Desarrollo de Software</strong> con enfoque Full-Stack.
-                    Domino la creación de soluciones web robustas: desde el <strong>Backend</strong> (NestJS, PHP), hasta el <strong>Frontend</strong> (React.js, HTML5/CSS3).
+                    Desarrollador de software en formación en <strong>Tecnólogo en Análisis y Desarrollo de
+                        Software</strong> con enfoque Full-Stack.
+                    Domino la creación de soluciones web robustas: desde el <strong>Backend</strong> (NestJS, PHP),
+                    hasta el <strong>Frontend</strong> (React.js, HTML5/CSS3).
                 </p>
                 <p>
-                    Experto en gestión de bases de datos relacionales (SQL, PostgreSQL) y diseño de interfaces (UI/UX) con <strong>Figma</strong>.
+                    Experto en gestión de bases de datos relacionales (SQL, PostgreSQL) y diseño de interfaces (UI/UX)
+                    con <strong>Figma</strong>.
                 </p>
                 <p class="font-bold text-secondary">
-                    Busco contrato de aprendizaje para aportar valor en proyectos desafiantes y consolidar mi experiencia profesional, preferiblemente en modalidad teletrabajo.
+                    Busco contrato de aprendizaje para aportar valor en proyectos desafiantes y consolidar mi
+                    experiencia profesional, preferiblemente en modalidad teletrabajo.
                 </p>
             </div>
-            
-            <!-- Botones de Acción -->
-            <div class="flex flex-col sm:flex-row w-full sm:w-auto gap-4 pt-4">
-                <a href="https://wa.me/573177604449?text=Hola%20Andres,%20vi%20tu%20portafolio%20y%20me%20interesa%20tu%20perfil." target="_blank" class="w-full sm:w-auto px-8 py-3.5 bg-green-600 hover:bg-green-700 text-white rounded-xl font-bold transition-all shadow-md hover:shadow-lg flex items-center justify-center gap-2">
-                    <i class="fab fa-whatsapp text-xl"></i> Contactar
-                </a>
-                
-                <button onclick="sendEmail()" class="w-full sm:w-auto px-8 py-3.5 bg-secondary hover:bg-blue-600 text-white rounded-xl font-bold transition-all shadow-md hover:shadow-lg flex items-center justify-center gap-2">
-                    <i class="fas fa-envelope text-xl"></i> Correo
-                </button>
 
-                <a href="https://github.com/AndresPuyol" target="_blank" class="w-full sm:w-auto px-8 py-3.5 bg-white dark:bg-slate-800 border border-slate-300 dark:border-slate-600 hover:bg-slate-50 dark:hover:bg-slate-700 text-slate-800 dark:text-white rounded-xl font-bold transition-all shadow-sm hover:shadow-md flex items-center justify-center gap-2">
-                    <i class="fab fa-github text-xl"></i> GitHub
+            <div class="flex flex-col sm:flex-row w-full sm:w-auto gap-4 pt-4">
+                <a href="https://wa.me/573177604449?text=Hola%20Andres,%20vi%20tu%20portafolio%20y%20me%20interesa%20tu%20perfil."
+                    target="_blank"
+                    class="w-full sm:w-auto px-8 py-3.5 bg-green-600 hover:bg-green-500 text-white rounded-xl font-bold transition-all duration-300 shadow-md hover:shadow-xl hover:-translate-y-1 flex items-center justify-center gap-2 group">
+                    <i class="fab fa-whatsapp text-xl group-hover:scale-110 transition-transform"></i> Contactar
+                </a>
+                <a href="#" onclick="handleEmail(event)"
+                    class="w-full sm:w-auto px-8 py-3.5 bg-secondary hover:bg-blue-600 text-white rounded-xl font-bold transition-all duration-300 shadow-md hover:shadow-xl hover:-translate-y-1 flex items-center justify-center gap-2 group">
+                    <i class="fas fa-envelope text-xl group-hover:scale-110 transition-transform"></i> Correo
+                </a>
+
+                <a href="https://github.com/AndresPuyol" target="_blank"
+                    class="w-full sm:w-auto px-8 py-3.5 bg-white dark:bg-slate-800 border border-slate-300 dark:border-slate-600 hover:bg-slate-50 dark:hover:bg-slate-700 text-slate-800 dark:text-white rounded-xl font-bold transition-all duration-300 shadow-sm hover:shadow-lg hover:-translate-y-1 flex items-center justify-center gap-2 group">
+                    <i class="fab fa-github text-xl group-hover:scale-110 transition-transform"></i> GitHub
                 </a>
             </div>
-            
-            <div class="flex items-center justify-center lg:justify-start gap-2 text-sm text-slate-500 dark:text-slate-400 pt-2">
-                <i class="fas fa-map-marker-alt text-red-500"></i> <span class="font-medium">Timana - Huila (Remoto)</span>
+
+            <div
+                class="flex items-center justify-center lg:justify-start gap-2 text-sm text-slate-500 dark:text-slate-400 pt-2">
+                <i class="fas fa-map-marker-alt text-red-500"></i> <span class="font-medium">Timana - Huila
+                    (Remoto)</span>
             </div>
         </div>
 
@@ -254,9 +331,11 @@
                 <img src="perfil.jpg" alt="Andres Peña" class="profile-image">
             </div>
 
-            <!-- Gráfica de Perfil MEJORADA -->
-             <div class="bg-white/90 dark:bg-slate-800/90 p-6 rounded-2xl shadow-xl w-full max-w-md border border-slate-100 dark:border-slate-700 backdrop-blur-md">
-                <h3 class="text-center font-bold text-lg mb-4 text-slate-800 dark:text-slate-100">Competencias Clave</h3>
+            <!-- Gráfica Radar -->
+            <div
+                class="bg-white/90 dark:bg-slate-800/90 p-6 rounded-2xl shadow-xl w-full max-w-md border border-slate-100 dark:border-slate-700 backdrop-blur-md">
+                <h3 class="text-center font-bold text-lg mb-4 text-slate-800 dark:text-slate-100">Competencias Clave
+                </h3>
                 <div class="relative h-64 w-full">
                     <canvas id="skillsChart"></canvas>
                 </div>
@@ -264,21 +343,27 @@
         </div>
     </header>
 
-    <!-- SECCIÓN DE CARRUSEL GIGANTE (FULL WIDTH) -->
+    <!-- SECCIÓN DE CARRUSEL GIGANTE -->
     <section class="w-full relative z-20 mb-16 mt-8" data-aos="fade-up">
         <div class="carousel-strip">
-            <h3 class="text-center text-xl md:text-2xl font-bold mb-10 text-slate-600 dark:text-slate-300 tracking-widest uppercase opacity-90">Stack Tecnológico</h3>
-            
+            <h3
+                class="text-center text-xl md:text-2xl font-bold mb-10 text-slate-600 dark:text-slate-300 tracking-widest uppercase opacity-90">
+                Stack Tecnológico</h3>
+
             <div class="flex overflow-hidden">
                 <!-- El contenedor que se mueve -->
                 <div class="carousel-track animate-scroll-left" id="carousel-track-container">
                     <!-- JS llena esto -->
                 </div>
             </div>
-            
+
             <!-- Degradados laterales -->
-            <div class="absolute top-0 left-0 h-full w-24 bg-gradient-to-r from-lightbg dark:from-primary to-transparent z-20 pointer-events-none"></div>
-            <div class="absolute top-0 right-0 h-full w-24 bg-gradient-to-l from-lightbg dark:from-primary to-transparent z-20 pointer-events-none"></div>
+            <div
+                class="absolute top-0 left-0 h-full w-12 md:w-24 bg-gradient-to-r from-lightbg dark:from-primary to-transparent z-20 pointer-events-none">
+            </div>
+            <div
+                class="absolute top-0 right-0 h-full w-12 md:w-24 bg-gradient-to-l from-lightbg dark:from-primary to-transparent z-20 pointer-events-none">
+            </div>
         </div>
     </section>
 
@@ -287,24 +372,31 @@
         <div class="container mx-auto px-4">
             <div class="max-w-5xl mx-auto text-center">
                 <h3 class="text-3xl font-bold mb-6 text-slate-800 dark:text-white">Perfil Profesional</h3>
-                <p class="text-lg md:text-xl text-slate-600 dark:text-slate-300 leading-relaxed mb-12 max-w-4xl mx-auto">
-                    Soy una persona <strong>propositiva y autodidacta</strong>. No me limito a seguir instrucciones; siempre busco optimizar procesos y aportar soluciones creativas. 
-                    Mi experiencia en el proyecto Agrotech me enseñó el valor del trabajo en equipo, la comunicación efectiva y la importancia de entender el negocio para construir software útil.
+                <p
+                    class="text-lg md:text-xl text-slate-600 dark:text-slate-300 leading-relaxed mb-12 max-w-4xl mx-auto">
+                    Soy una persona <strong>propositiva y autodidacta</strong>. No me limito a seguir instrucciones;
+                    siempre busco optimizar procesos y aportar soluciones creativas.
+                    Mi experiencia en el proyecto Agrotech me enseñó el valor del trabajo en equipo, la comunicación
+                    efectiva y la importancia de entender el negocio para construir software útil.
                 </p>
                 <div class="grid grid-cols-2 md:grid-cols-4 gap-6">
-                    <div class="p-6 bg-white dark:bg-slate-800 rounded-xl shadow-md border-b-4 border-blue-500 hover:shadow-lg transition-shadow">
+                    <div
+                        class="p-6 bg-white dark:bg-slate-800 rounded-xl shadow-md border-b-4 border-blue-500 hover:shadow-lg transition-shadow">
                         <i class="fas fa-search text-3xl text-blue-500 mb-3"></i>
                         <h4 class="font-bold text-lg text-slate-700 dark:text-slate-200">Curioso</h4>
                     </div>
-                    <div class="p-6 bg-white dark:bg-slate-800 rounded-xl shadow-md border-b-4 border-green-500 hover:shadow-lg transition-shadow">
+                    <div
+                        class="p-6 bg-white dark:bg-slate-800 rounded-xl shadow-md border-b-4 border-green-500 hover:shadow-lg transition-shadow">
                         <i class="fas fa-users text-3xl text-green-500 mb-3"></i>
                         <h4 class="font-bold text-lg text-slate-700 dark:text-slate-200">Colaborativo</h4>
                     </div>
-                    <div class="p-6 bg-white dark:bg-slate-800 rounded-xl shadow-md border-b-4 border-yellow-500 hover:shadow-lg transition-shadow">
+                    <div
+                        class="p-6 bg-white dark:bg-slate-800 rounded-xl shadow-md border-b-4 border-yellow-500 hover:shadow-lg transition-shadow">
                         <i class="fas fa-lightbulb text-3xl text-yellow-500 mb-3"></i>
                         <h4 class="font-bold text-lg text-slate-700 dark:text-slate-200">Creativo</h4>
                     </div>
-                    <div class="p-6 bg-white dark:bg-slate-800 rounded-xl shadow-md border-b-4 border-red-500 hover:shadow-lg transition-shadow">
+                    <div
+                        class="p-6 bg-white dark:bg-slate-800 rounded-xl shadow-md border-b-4 border-red-500 hover:shadow-lg transition-shadow">
                         <i class="fas fa-rocket text-3xl text-red-500 mb-3"></i>
                         <h4 class="font-bold text-lg text-slate-700 dark:text-slate-200">Proactivo</h4>
                     </div>
@@ -318,13 +410,23 @@
         <h3 class="text-2xl font-bold mb-10 text-center text-slate-800 dark:text-white">
             <i class="fas fa-layer-group text-secondary mr-2"></i> Detalle de Habilidades
         </h3>
-        
+
         <div class="flex flex-wrap justify-center gap-3 mb-10" id="skill-filters">
-            <button class="filter-btn active px-5 py-2 rounded-full text-sm font-bold bg-secondary text-white transition-colors shadow-sm" data-filter="all">Todos</button>
-            <button class="filter-btn px-5 py-2 rounded-full text-sm font-bold bg-slate-200 dark:bg-slate-700 text-slate-600 dark:text-slate-300 hover:bg-slate-300 dark:hover:bg-slate-600 transition-colors" data-filter="backend">Backend</button>
-            <button class="filter-btn px-5 py-2 rounded-full text-sm font-bold bg-slate-200 dark:bg-slate-700 text-slate-600 dark:text-slate-300 hover:bg-slate-300 dark:hover:bg-slate-600 transition-colors" data-filter="frontend">Frontend</button>
-            <button class="filter-btn px-5 py-2 rounded-full text-sm font-bold bg-slate-200 dark:bg-slate-700 text-slate-600 dark:text-slate-300 hover:bg-slate-300 dark:hover:bg-slate-600 transition-colors" data-filter="database">Base de Datos</button>
-            <button class="filter-btn px-5 py-2 rounded-full text-sm font-bold bg-slate-200 dark:bg-slate-700 text-slate-600 dark:text-slate-300 hover:bg-slate-300 dark:hover:bg-slate-600 transition-colors" data-filter="tools">Herramientas</button>
+            <button
+                class="filter-btn active px-5 py-2 rounded-full text-sm font-bold bg-secondary text-white transition-colors shadow-sm"
+                data-filter="all">Todos</button>
+            <button
+                class="filter-btn px-5 py-2 rounded-full text-sm font-bold bg-slate-200 dark:bg-slate-700 text-slate-600 dark:text-slate-300 hover:bg-slate-300 dark:hover:bg-slate-600 transition-colors"
+                data-filter="backend">Backend</button>
+            <button
+                class="filter-btn px-5 py-2 rounded-full text-sm font-bold bg-slate-200 dark:bg-slate-700 text-slate-600 dark:text-slate-300 hover:bg-slate-300 dark:hover:bg-slate-600 transition-colors"
+                data-filter="frontend">Frontend</button>
+            <button
+                class="filter-btn px-5 py-2 rounded-full text-sm font-bold bg-slate-200 dark:bg-slate-700 text-slate-600 dark:text-slate-300 hover:bg-slate-300 dark:hover:bg-slate-600 transition-colors"
+                data-filter="database">Base de Datos</button>
+            <button
+                class="filter-btn px-5 py-2 rounded-full text-sm font-bold bg-slate-200 dark:bg-slate-700 text-slate-600 dark:text-slate-300 hover:bg-slate-300 dark:hover:bg-slate-600 transition-colors"
+                data-filter="tools">Herramientas</button>
         </div>
 
         <div class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-4" id="skills-grid">
@@ -336,40 +438,53 @@
     <section class="py-16 relative z-10" data-aos="fade-up">
         <div class="container mx-auto px-4">
             <h3 class="text-3xl font-bold mb-12 text-center text-slate-800 dark:text-white">Proyecto Destacado</h3>
-            
-            <div class="max-w-5xl mx-auto bg-white dark:bg-slate-800 rounded-3xl shadow-xl overflow-hidden border border-slate-100 dark:border-slate-700">
+
+            <div
+                class="max-w-5xl mx-auto bg-white dark:bg-slate-800 rounded-3xl shadow-xl overflow-hidden border border-slate-100 dark:border-slate-700 hover:shadow-2xl transition-shadow duration-300 group">
                 <div class="p-8 md:p-12">
                     <div class="flex flex-col md:flex-row justify-between items-start md:items-center mb-6 gap-4">
                         <div>
                             <h4 class="text-3xl font-bold text-secondary mb-1">Agrotech</h4>
-                            <p class="text-sm font-medium text-slate-500 dark:text-slate-400 uppercase tracking-wider">Proyecto Formativo SENA | Full-Stack</p>
+                            <p class="text-sm font-medium text-slate-500 dark:text-slate-400 uppercase tracking-wider">
+                                Proyecto Formativo SENA | Full-Stack</p>
                         </div>
-                        <span class="px-4 py-1.5 bg-blue-100 text-blue-800 dark:bg-blue-900 dark:text-blue-100 text-xs font-bold rounded-full">Agricultura Tech</span>
+                        <span
+                            class="px-4 py-1.5 bg-blue-100 text-blue-800 dark:bg-blue-900 dark:text-blue-100 text-xs font-bold rounded-full">Agricultura
+                            Tech</span>
                     </div>
-                    
+
                     <p class="text-slate-700 dark:text-slate-300 mb-8 leading-relaxed text-lg">
-                        Agrotech integra tecnología en la agricultura para optimizar el monitoreo de cultivos y la gestión de recursos. 
+                        Agrotech integra tecnología en la agricultura para optimizar el monitoreo de cultivos y la
+                        gestión de recursos.
                         Incluye módulos para registro de cultivos, análisis de datos y una plataforma web intuitiva.
                     </p>
                     <div class="bg-slate-50 dark:bg-slate-700/50 p-6 rounded-xl border-l-4 border-secondary mb-10">
                         <p class="text-slate-700 dark:text-slate-200 text-sm md:text-base leading-relaxed">
-                            <strong>Mi Rol:</strong> Diseñé la interfaz en Figma, desarrollé el API REST con NestJS para gestionar los productos, construí el frontend con React para consumir los datos y administré la base de datos en pgAdmin.
+                            <strong>Mi Rol:</strong> Diseñé la interfaz en Figma, desarrollé el API REST con NestJS para
+                            gestionar los productos, construí el frontend con React para consumir los datos y administré
+                            la base de datos en pgAdmin.
                         </p>
                     </div>
 
                     <div class="grid md:grid-cols-2 gap-8 mb-10">
-                        <div class="p-5 rounded-xl border border-slate-200 dark:border-slate-600 bg-white dark:bg-slate-800">
-                            <h5 class="font-bold mb-3 flex items-center gap-3 text-lg text-slate-800 dark:text-white"><i class="fas fa-server text-emerald-500"></i> Backend & DB</h5>
-                            <p class="text-base text-slate-600 dark:text-slate-400">NestJS, Node.js, PostgreSQL (pgAdmin).</p>
+                        <div
+                            class="p-5 rounded-xl border border-slate-200 dark:border-slate-600 bg-white dark:bg-slate-800">
+                            <h5 class="font-bold mb-3 flex items-center gap-3 text-lg text-slate-800 dark:text-white"><i
+                                    class="fas fa-server text-emerald-500"></i> Backend & DB</h5>
+                            <p class="text-base text-slate-600 dark:text-slate-400">NestJS, Node.js, PostgreSQL
+                                (pgAdmin).</p>
                         </div>
-                        <div class="p-5 rounded-xl border border-slate-200 dark:border-slate-600 bg-white dark:bg-slate-800">
-                            <h5 class="font-bold mb-3 flex items-center gap-3 text-lg text-slate-800 dark:text-white"><i class="fas fa-desktop text-blue-500"></i> Frontend & UX</h5>
+                        <div
+                            class="p-5 rounded-xl border border-slate-200 dark:border-slate-600 bg-white dark:bg-slate-800">
+                            <h5 class="font-bold mb-3 flex items-center gap-3 text-lg text-blue-500"><i
+                                    class="fas fa-desktop text-blue-500"></i> Frontend & UX</h5>
                             <p class="text-base text-slate-600 dark:text-slate-400">React.js, Figma, HTML5, CSS3.</p>
                         </div>
                     </div>
 
                     <div class="border-t border-slate-200 dark:border-slate-700 pt-8 text-center">
-                        <a href="https://github.com/KERLINFIGUEROA0/ProyectoFormativo" target="_blank" class="inline-flex justify-center items-center px-8 py-3 bg-slate-800 hover:bg-slate-900 text-white rounded-xl font-bold transition-colors shadow-md gap-3">
+                        <a href="https://github.com/KERLINFIGUEROA0/ProyectoFormativoAgrotech.git" target="_blank"
+                            class="inline-flex justify-center items-center px-8 py-3 bg-slate-800 hover:bg-slate-900 text-white rounded-xl font-bold transition-colors shadow-md gap-3">
                             <i class="fab fa-github text-xl"></i> Ver Repositorio del Proyecto
                         </a>
                     </div>
@@ -381,78 +496,112 @@
     <!-- Certifications Section -->
     <section class="container mx-auto px-4 py-16 relative z-10" data-aos="fade-up">
         <h3 class="text-3xl font-bold mb-12 text-center text-slate-800 dark:text-white">Certificaciones & Logros</h3>
-        
+
+        <!-- Grid Simétrico -->
         <div class="grid sm:grid-cols-2 md:grid-cols-3 gap-8 max-w-6xl mx-auto">
-            
+
             <!-- Certificado 1 -->
-            <div class="bg-white dark:bg-slate-800 p-8 rounded-2xl shadow-lg border-t-4 border-blue-500 hover:shadow-xl transition-shadow">
-                <div>
+            <div
+                class="bg-white dark:bg-slate-800 p-8 rounded-2xl shadow-lg border-t-4 border-blue-500 flex flex-col h-full hover:shadow-2xl hover:-translate-y-2 transition-all duration-300 group">
+                <div class="flex-grow">
                     <div class="flex items-center gap-4 mb-6">
                         <div class="p-3 bg-blue-100 text-blue-600 rounded-xl">
                             <i class="fas fa-mobile-alt text-2xl"></i>
                         </div>
-                        <h4 class="font-bold text-lg text-slate-800 dark:text-white leading-tight">Gestión de Proyectos</h4>
+                        <h4 class="font-bold text-lg text-slate-800 dark:text-white leading-tight">Gestión de Proyectos
+                        </h4>
                     </div>
-                    <p class="text-base text-slate-600 dark:text-slate-400 mb-2 font-medium">Gestiona tus Proyectos a través del Smartphone</p>
-                    <p class="text-sm text-slate-500 dark:text-slate-500 mb-6 bg-slate-100 dark:bg-slate-900 inline-block px-3 py-1 rounded-full font-semibold">40 Horas | Fundación Telefónica</p>
+                    <p class="text-base text-slate-600 dark:text-slate-400 mb-2 font-medium">Gestiona tus Proyectos a
+                        través del Smartphone</p>
+                    <p
+                        class="text-sm text-slate-500 dark:text-slate-500 mb-6 bg-slate-100 dark:bg-slate-900 inline-block px-3 py-1 rounded-full font-semibold">
+                        40 Horas | Fundación Telefónica</p>
                 </div>
-                <a href="certificado_gestion.pdf" target="_blank" class="block w-full text-center px-4 py-2 border-2 border-slate-200 dark:border-slate-600 rounded-lg text-sm font-bold text-slate-600 dark:text-slate-300 hover:bg-secondary hover:text-white hover:border-secondary transition-colors uppercase tracking-wider">
-                    Ver Certificado <i class="fas fa-external-link-alt ml-2"></i>
-                </a>
+                <div class="mt-auto">
+                    <a href="https://drive.google.com/file/d/1UtxO9giVtJ4XBtjp8u3lV-6Q3l_Cnnvi/view" target="_blank"
+                        class="block w-full text-center px-4 py-2 border-2 border-slate-200 dark:border-slate-600 rounded-lg text-sm font-bold text-slate-600 dark:text-slate-300 hover:bg-secondary hover:text-white hover:border-secondary transition-colors uppercase tracking-wider">
+                        Ver Certificado <i class="fas fa-external-link-alt ml-2"></i>
+                    </a>
+                </div>
             </div>
 
             <!-- Certificado 2 -->
-            <div class="bg-white dark:bg-slate-800 p-8 rounded-2xl shadow-lg border-t-4 border-purple-500 hover:shadow-xl transition-shadow">
-                <div>
+            <div
+                class="bg-white dark:bg-slate-800 p-8 rounded-2xl shadow-lg border-t-4 border-emerald-500 flex flex-col h-full hover:shadow-2xl hover:-translate-y-2 transition-all duration-300 group">
+                <div class="flex-grow">
                     <div class="flex items-center gap-4 mb-6">
-                        <div class="p-3 bg-purple-100 text-purple-600 rounded-xl">
+                        <div class="p-3 bg-emerald-100 text-emerald-600 rounded-xl">
                             <i class="fas fa-wifi text-2xl"></i>
                         </div>
-                        <h4 class="font-bold text-lg text-slate-800 dark:text-white leading-tight">Internet de las Cosas</h4>
+                        <h4 class="font-bold text-lg text-slate-800 dark:text-white leading-tight">Internet de las Cosas
+                        </h4>
                     </div>
-                    <p class="text-base text-slate-600 dark:text-slate-400 mb-2 font-medium">Principios básicos de IoT</p>
-                    <p class="text-sm text-slate-500 dark:text-slate-500 mb-6 bg-slate-100 dark:bg-slate-900 inline-block px-3 py-1 rounded-full font-semibold">20 Horas | Fundación Telefónica</p>
+                    <p class="text-base text-slate-600 dark:text-slate-400 mb-2 font-medium">Principios básicos de IoT
+                    </p>
+                    <p
+                        class="text-sm text-slate-500 dark:text-slate-500 mb-6 bg-slate-100 dark:bg-slate-900 inline-block px-3 py-1 rounded-full font-semibold">
+                        20 Horas | Fundación Telefónica</p>
                 </div>
-                <a href="certificado_iot.pdf" target="_blank" class="block w-full text-center px-4 py-2 border-2 border-slate-200 dark:border-slate-600 rounded-lg text-sm font-bold text-slate-600 dark:text-slate-300 hover:bg-purple-600 hover:text-white hover:border-purple-600 transition-colors uppercase tracking-wider">
-                    Ver Certificado <i class="fas fa-external-link-alt ml-2"></i>
-                </a>
+                <div class="mt-auto">
+                    <a href="https://drive.google.com/file/d/1_vIV_liQjuxY2VWHBB7DsF9K_4zk3qiL/view?" target="_blank"
+                        class="block w-full text-center px-4 py-2 border-2 border-slate-200 dark:border-slate-600 rounded-lg text-sm font-bold text-slate-600 dark:text-slate-300 hover:bg-emerald-600 hover:text-white hover:border-emerald-600 transition-colors uppercase tracking-wider">
+                        Ver Certificado <i class="fas fa-external-link-alt ml-2"></i>
+                    </a>
+                </div>
             </div>
 
             <!-- Certificado 3 -->
-            <div class="bg-white dark:bg-slate-800 p-8 rounded-2xl shadow-lg border-t-4 border-orange-500 hover:shadow-xl transition-shadow">
-                <div>
+            <div
+                class="bg-white dark:bg-slate-800 p-8 rounded-2xl shadow-lg border-t-4 border-slate-500 flex flex-col h-full hover:shadow-2xl hover:-translate-y-2 transition-all duration-300 group">
+                <div class="flex-grow">
                     <div class="flex items-center gap-4 mb-6">
-                        <div class="p-3 bg-orange-100 text-orange-600 rounded-xl">
+                        <div class="p-3 bg-slate-100 text-slate-600 rounded-xl">
                             <i class="fas fa-lightbulb text-2xl"></i>
                         </div>
                         <h4 class="font-bold text-lg text-slate-800 dark:text-white leading-tight">Emprendimiento</h4>
                     </div>
-                    <p class="text-base text-slate-600 dark:text-slate-400 mb-2 font-medium">Habilidades de emprendimiento digital</p>
-                    <p class="text-sm text-slate-500 dark:text-slate-500 mb-6 bg-slate-100 dark:bg-slate-900 inline-block px-3 py-1 rounded-full font-semibold">30 Horas | Fundación Telefónica</p>
+                    <p class="text-base text-slate-600 dark:text-slate-400 mb-2 font-medium">Habilidades de
+                        emprendimiento digital</p>
+                    <p
+                        class="text-sm text-slate-500 dark:text-slate-500 mb-6 bg-slate-100 dark:bg-slate-900 inline-block px-3 py-1 rounded-full font-semibold">
+                        30 Horas | Fundación Telefónica</p>
                 </div>
-                <a href="certificado_emprendimiento.pdf" target="_blank" class="block w-full text-center px-4 py-2 border-2 border-slate-200 dark:border-slate-600 rounded-lg text-sm font-bold text-slate-600 dark:text-slate-300 hover:bg-orange-500 hover:text-white hover:border-orange-500 transition-colors uppercase tracking-wider">
-                    Ver Certificado <i class="fas fa-external-link-alt ml-2"></i>
-                </a>
+                <div class="mt-auto">
+                    <a href="https://drive.google.com/file/d/1Nj27ymczUc5NfQcusQhMT6bcmBOwlcvE/view?" target="_blank"
+                        class="block w-full text-center px-4 py-2 border-2 border-slate-200 dark:border-slate-600 rounded-lg text-sm font-bold text-slate-600 dark:text-slate-300 hover:bg-slate-600 hover:text-white hover:border-slate-600 transition-colors uppercase tracking-wider">
+                        Ver Certificado <i class="fas fa-external-link-alt ml-2"></i>
+                    </a>
+                </div>
             </div>
 
         </div>
     </section>
 
     <!-- Scroll Top Button -->
-    <button id="scrollTopBtn" onclick="scrollToTop()" class="p-4 rounded-full bg-secondary text-white shadow-xl hover:bg-blue-600 transition-transform hover:-translate-y-1" title="Volver arriba">
+    <button id="scrollTopBtn" onclick="scrollToTop()"
+        class="p-4 rounded-full bg-secondary text-white shadow-xl hover:bg-blue-600 transition-transform hover:-translate-y-1"
+        title="Volver arriba">
         <i class="fas fa-arrow-up text-xl"></i>
     </button>
 
     <!-- Footer -->
-    <footer class="bg-white dark:bg-slate-900 border-t border-slate-200 dark:border-slate-800 mt-auto py-12 transition-colors relative z-10">
+    <footer
+        class="bg-white dark:bg-slate-900 border-t border-slate-200 dark:border-slate-800 mt-auto py-12 transition-colors relative z-10">
         <div class="container mx-auto px-4 text-center">
             <h4 class="text-2xl font-bold mb-8 text-slate-700 dark:text-slate-300">¿Listo para trabajar juntos?</h4>
             <div class="flex justify-center gap-10 mb-8">
-                <a href="javascript:void(0)" onclick="sendEmail()" class="text-5xl text-slate-400 hover:text-secondary transition-colors transform hover:scale-110"><i class="fas fa-envelope"></i></a>
-                <a href="https://wa.me/573177604449" class="text-5xl text-slate-400 hover:text-green-500 transition-colors transform hover:scale-110"><i class="fab fa-whatsapp"></i></a>
-                <a href="https://github.com/AndresPuyol" class="text-5xl text-slate-400 hover:text-slate-800 dark:hover:text-white transition-colors transform hover:scale-110"><i class="fab fa-github"></i></a>
+                <a href="#" onclick="handleEmail(event)"
+                    class="text-5xl text-slate-400 hover:text-secondary transition-all duration-300 transform hover:scale-125 hover:rotate-6"><i
+                        class="fas fa-envelope"></i></a>
+                <a href="https://wa.me/573177604449"
+                    class="text-5xl text-slate-400 hover:text-green-500 transition-all duration-300 transform hover:scale-125 hover:-rotate-6"><i
+                        class="fab fa-whatsapp"></i></a>
+                <a href="https://github.com/AndresPuyol"
+                    class="text-5xl text-slate-400 hover:text-slate-800 dark:hover:text-white transition-all duration-300 transform hover:scale-125 hover:rotate-6"><i
+                        class="fab fa-github"></i></a>
             </div>
-            <p class="text-sm text-slate-400">© 2025 Andres Orlando Peña Guzman. <br>Desarrollado con <i class="fas fa-heart text-red-500 animate-pulse"></i> y NestJS/React.</p>
+            <p class="text-sm text-slate-400">© 2025 Andres Orlando Peña Guzman. <br>Desarrollado con <i
+                    class="fas fa-heart text-red-500 animate-pulse"></i> y NestJS/React.</p>
         </div>
     </footer>
 
@@ -484,22 +633,21 @@
             { name: "APIs REST", category: "backend", icon: "fa-network-wired" },
         ];
 
-        // 1. BIG CAROUSEL LOGIC - FIXED HOVER & FULL WIDTH
+        // 1. BIG CAROUSEL LOGIC - FIXED NO HOVER EFFECT & FULL WIDTH
         const carouselContainer = document.getElementById('carousel-track-container');
-        
-        // Duplicar datos varias veces para efecto infinito
-        const infiniteSkills = [...skillsData, ...skillsData, ...skillsData, ...skillsData];
+
+        const infiniteSkills = [...skillsData, ...skillsData, ...skillsData];
 
         function createCarouselItem(skill) {
             let iconClass = skill.icon.includes('node') || skill.icon.includes('php') || skill.icon.includes('react') || skill.icon.includes('html') || skill.icon.includes('js') || skill.icon.includes('figma') || skill.icon.includes('github') ? 'fab' : 'fas';
-            
+
             const div = document.createElement('div');
-            // FIX: Removed pause on hover, added scale/brightness effect instead
-            div.className = "tech-card group"; 
-            
+            // FIXED FOR LIGHT MODE CONTRAST (STRONGER ++)
+            div.className = "flex flex-col items-center justify-center min-w-[150px] h-[150px] md:min-w-[180px] md:h-[180px] rounded-3xl backdrop-blur-md border border-slate-400 bg-white/90 dark:bg-slate-800/40 dark:border-white/10 shadow-lg mx-6";
+
             div.innerHTML = `
-                <i class="${iconClass} ${skill.icon} text-5xl md:text-6xl text-slate-500 dark:text-slate-400 mb-3 drop-shadow-sm group-hover:text-secondary transition-colors duration-300"></i>
-                <span class="text-xs md:text-sm font-bold text-slate-500 dark:text-slate-400 uppercase tracking-wider group-hover:text-secondary transition-colors duration-300">${skill.name}</span>
+                <i class="${iconClass} ${skill.icon} text-6xl md:text-7xl text-slate-700 dark:text-slate-200 mb-4 drop-shadow-md"></i>
+                <span class="text-xs md:text-sm font-bold text-slate-600 dark:text-slate-300 uppercase tracking-wider">${skill.name}</span>
             `;
             return div;
         }
@@ -508,27 +656,27 @@
 
         // 2. GRID LOGIC
         const skillsGrid = document.getElementById('skills-grid');
-        
+
         function renderSkills(filter = 'all') {
             skillsGrid.innerHTML = '';
             let delay = 0;
             skillsData.forEach(skill => {
                 if (filter === 'all' || skill.category === filter) {
                     const card = document.createElement('div');
-                    card.className = `skill-card bg-white dark:bg-slate-800 p-4 rounded-xl shadow-sm border border-slate-100 dark:border-slate-700 flex items-center gap-4 transition-all duration-300 hover:border-l-4 hover:border-secondary`;
+                    card.className = `skill-card liquid-hover bg-white dark:bg-slate-800 p-4 rounded-xl shadow-sm border border-slate-100 dark:border-slate-700 flex items-center gap-4 transition-all duration-300 hover:shadow-lg hover:-translate-y-2 cursor-default group`;
                     // Fade in animation manually
                     card.style.animation = `fadeIn 0.5s ease forwards ${delay}s`;
                     card.style.opacity = '0';
-                    
+
                     let iconClass = skill.icon.includes('node') || skill.icon.includes('php') || skill.icon.includes('react') || skill.icon.includes('html') || skill.icon.includes('js') || skill.icon.includes('figma') || skill.icon.includes('github') ? 'fab' : 'fas';
-                    
+
                     card.innerHTML = `
-                        <div class="w-10 h-10 rounded-full bg-slate-100 dark:bg-slate-700 flex items-center justify-center text-secondary shrink-0">
+                        <div class="icon-bg w-10 h-10 rounded-full bg-slate-100 dark:bg-slate-700 flex items-center justify-center text-secondary shrink-0 transition-colors duration-300">
                             <i class="${iconClass} ${skill.icon} text-xl"></i>
                         </div>
                         <div>
-                            <h5 class="font-bold text-slate-700 dark:text-slate-200 text-sm leading-tight">${skill.name}</h5>
-                            <span class="text-xs text-slate-500 dark:text-slate-400 capitalize hidden sm:block">${skill.category}</span>
+                            <h5 class="font-bold text-slate-700 dark:text-slate-200 text-sm leading-tight transition-colors duration-300">${skill.name}</h5>
+                            <span class="text-xs text-slate-500 dark:text-slate-400 capitalize hidden sm:block transition-colors duration-300">${skill.category}</span>
                         </div>
                     `;
                     skillsGrid.appendChild(card);
@@ -563,7 +711,7 @@
 
         const themeToggle = document.getElementById('theme-toggle');
         const html = document.documentElement;
-        
+
         if (localStorage.getItem('theme') === 'dark' || (!('theme' in localStorage) && window.matchMedia('(prefers-color-scheme: dark)').matches)) {
             html.classList.add('dark');
         }
@@ -579,25 +727,43 @@
             }
         });
 
-        // 3. IMPROVED CHART CONFIG (RADAR)
-        const ctx = document.getElementById('skillsChart').getContext('2d');
+        // 3. IMPROVED CHART CONFIG (RADAR) with Animation & Gradient
+        const canvas = document.getElementById('skillsChart');
+        const ctx = canvas.getContext('2d');
+
+        // Simple radial gradient approximation (center to edges)
+        // Note: Canvas size changes, so we define a generic large gradient or update on resize. 
+        // For simplicity/stability, we'll use a dynamic fill in the dataset if possible, 
+        // but Chart.js handles canvas context colors well.
+        let gradient = ctx.createRadialGradient(200, 200, 0, 200, 200, 200);
+        gradient.addColorStop(0, 'rgba(59, 130, 246, 0.4)'); // Center glow
+        gradient.addColorStop(1, 'rgba(59, 130, 246, 0.05)'); // Fade out
+
         let skillsChart = new Chart(ctx, {
             type: 'radar',
             data: {
                 labels: ['Backend', 'Frontend', 'Base de Datos', 'Diseño UI', 'Herramientas', 'Lógica'],
                 datasets: [{
                     label: 'Nivel de Competencia',
-                    data: [85, 75, 70, 65, 80, 90], 
-                    backgroundColor: 'rgba(59, 130, 246, 0.2)', 
-                    borderColor: '#3b82f6', 
-                    pointBackgroundColor: '#10b981', 
+                    data: [85, 75, 70, 65, 80, 90],
+                    backgroundColor: gradient,
+                    borderColor: '#3b82f6',
+                    pointBackgroundColor: '#10b981',
                     pointBorderColor: '#fff',
-                    pointHoverBackgroundColor: '#fff',
-                    pointHoverBorderColor: '#10b981',
-                    borderWidth: 2
+                    pointHoverBackgroundColor: '#10b981',
+                    pointHoverBorderColor: '#fff',
+                    pointRadius: 6,
+                    pointHoverRadius: 9,
+                    borderWidth: 3,
+                    tension: 0.35, // Curved lines (Organico)
+                    fill: true
                 }]
             },
             options: {
+                animation: {
+                    duration: 2000,
+                    easing: 'easeOutQuart'
+                },
                 responsive: true,
                 maintainAspectRatio: false,
                 scales: {
@@ -622,41 +788,66 @@
         function updateChartColors(isDark) {
             const gridColor = isDark ? 'rgba(255, 255, 255, 0.1)' : 'rgba(0, 0, 0, 0.1)';
             const textColor = isDark ? '#cbd5e1' : '#475569';
-            
+
             skillsChart.options.scales.r.angleLines.color = gridColor;
             skillsChart.options.scales.r.grid.color = gridColor;
             skillsChart.options.scales.r.pointLabels.color = textColor;
             skillsChart.update();
         }
-        
+
         updateChartColors(html.classList.contains('dark'));
 
-        function sendEmail() {
-            const email = "penaguzmanandres@gmail.com";
-            const subject = encodeURIComponent("Interés en tu Perfil - Contrato de Aprendizaje");
-            const body = encodeURIComponent("Hola Andres,\n\nVimos tu portafolio y nos gustaría contactarte para una oportunidad de contrato de aprendizaje.\n\nQuedamos atentos a tu respuesta.");
-            
-            const gmailLink = `https://mail.google.com/mail/?view=cm&fs=1&to=${email}&su=${subject}&body=${body}`;
-            const mailtoLink = `mailto:${email}?subject=${subject}&body=${body}`;
+        // 4. CONTINUOUS ANIMATION LOOP (BREATHING EFFECT)
+        let direction = 1;
+        let tension = 0.35;
+        let radius = 6;
 
-            if (/Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent)) {
-                window.location.href = mailtoLink;
+        setInterval(() => {
+            // Oscillate Tension (0.35 to 0.45)
+            if (tension >= 0.45) direction = -1;
+            if (tension <= 0.35) direction = 1;
+
+            tension += 0.002 * direction;
+
+            // Oscillate Point Radius slightly (6 to 7)
+            radius += 0.02 * direction;
+
+            skillsChart.data.datasets[0].tension = tension;
+            skillsChart.data.datasets[0].pointRadius = radius;
+            skillsChart.update('none'); // Update without full re-render animation
+        }, 50);
+
+
+        // Smart Email Handler
+        function handleEmail(e) {
+            e.preventDefault();
+            const email = "penaguzmanandres@gmail.com";
+            const subject = "Contacto desde Portafolio";
+            const body = "Hola Andrés, me gustaría contactarte para...";
+
+            // Regex to detect mobile devices
+            const isMobile = /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent);
+
+            if (isMobile) {
+                // Mobile: Try standard mailto (usually works best with native apps)
+                window.location.href = `mailto:${email}?subject=${encodeURIComponent(subject)}&body=${encodeURIComponent(body)}`;
             } else {
-                window.open(gmailLink, '_blank');
-                setTimeout(() => { window.location.href = mailtoLink; }, 500);
+                // Desktop: Open Gmail Web in new tab (safest for users without Outlook/Mail app)
+                const gmailUrl = `https://mail.google.com/mail/?view=cm&fs=1&to=${email}&su=${encodeURIComponent(subject)}&body=${encodeURIComponent(body)}`;
+                window.open(gmailUrl, '_blank');
             }
         }
 
         // Scroll to Top Logic
         const scrollTopBtn = document.getElementById("scrollTopBtn");
 
-        window.onscroll = function() {
+        window.onscroll = function () {
             if (document.body.scrollTop > 300 || document.documentElement.scrollTop > 300) {
                 scrollTopBtn.style.display = "block";
                 setTimeout(() => { scrollTopBtn.style.opacity = "1"; }, 10);
             } else {
                 scrollTopBtn.style.opacity = "0";
-                setTimeout(() => { if(scrollTopBtn.style.opacity === "0") scrollTopBtn.style.display = "none"; }, 300);
+                setTimeout(() => { if (scrollTopBtn.style.opacity === "0") scrollTopBtn.style.display = "none"; }, 300);
             }
         };
 
@@ -665,4 +856,5 @@
         }
     </script>
 </body>
+
 </html>
