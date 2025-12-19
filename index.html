@@ -1,0 +1,450 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Portafolio - Andres Orlando Peña Guzman</title>
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Chart.js -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <!-- FontAwesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    
+    <script>
+        tailwind.config = {
+            darkMode: 'class',
+            theme: {
+                extend: {
+                    colors: {
+                        primary: '#0f172a', // Slate 900
+                        secondary: '#3b82f6', // Blue 500
+                        accent: '#10b981', // Emerald 500
+                        darkbg: '#1e293b',
+                        lightbg: '#ffffff'
+                    },
+                    fontFamily: {
+                        sans: ['Inter', 'sans-serif'],
+                    }
+                }
+            }
+        }
+    </script>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700&display=swap');
+        
+        body {
+            font-family: 'Inter', sans-serif;
+            transition: background-color 0.3s, color 0.3s;
+        }
+
+        .chart-container {
+            position: relative;
+            width: 100%;
+            max-width: 350px; /* Ajuste para móvil */
+            margin: 0 auto;
+            height: 300px;
+            max-height: 300px;
+        }
+
+        .skill-card {
+            transition: transform 0.2s, box-shadow 0.2s;
+        }
+        .skill-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1);
+        }
+        
+        /* Foto de perfil */
+        .profile-image-container {
+            position: relative;
+            width: 160px; /* Un poco más pequeña en móvil por defecto */
+            height: 160px;
+            border-radius: 50%;
+            padding: 4px;
+            background: linear-gradient(to right, #3b82f6, #10b981);
+            margin: 0 auto; /* Centrado en móvil */
+        }
+        @media (min-width: 1024px) {
+            .profile-image-container {
+                width: 180px;
+                height: 180px;
+                margin: 0; /* A la izquierda en desktop */
+            }
+        }
+
+        .profile-image {
+            width: 100%;
+            height: 100%;
+            border-radius: 50%;
+            object-fit: cover;
+            border: 4px solid white;
+        }
+        .dark .profile-image {
+            border: 4px solid #1e293b;
+        }
+    </style>
+</head>
+<body class="bg-lightbg text-slate-800 dark:bg-primary dark:text-slate-100 flex flex-col min-h-screen">
+
+    <!-- Navigation -->
+    <nav class="w-full p-4 flex justify-end container mx-auto">
+        <button id="theme-toggle" class="p-2 rounded-full hover:bg-gray-200 dark:hover:bg-slate-700 transition-colors" aria-label="Cambiar tema">
+            <i class="fas fa-moon text-xl dark:hidden"></i>
+            <i class="fas fa-sun text-xl hidden dark:inline text-yellow-400"></i>
+        </button>
+    </nav>
+
+    <!-- Hero Section -->
+    <header class="container mx-auto px-4 py-8 md:py-12 flex flex-col lg:flex-row items-center gap-10">
+        
+        <!-- Columna Izquierda: Info -->
+        <div class="lg:w-3/5 flex flex-col items-center lg:items-start text-center lg:text-left space-y-6 order-2 lg:order-1">
+            
+            <div class="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-green-100 text-green-800 dark:bg-green-900 dark:text-green-100 text-sm font-semibold">
+                <span class="relative flex h-3 w-3">
+                  <span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-green-400 opacity-75"></span>
+                  <span class="relative inline-flex rounded-full h-3 w-3 bg-green-500"></span>
+                </span>
+                Disponible para Contrato de Aprendizaje
+            </div>
+            
+            <div>
+                <h1 class="text-3xl md:text-5xl font-bold bg-clip-text text-transparent bg-gradient-to-r from-blue-600 to-indigo-600 dark:from-blue-400 dark:to-indigo-400 leading-tight mb-2">
+                    Andres Orlando<br>Peña Guzman
+                </h1>
+                <h2 class="text-xl md:text-2xl text-slate-600 dark:text-slate-400 font-semibold">
+                    Desarrollador Jr. Full-Stack
+                </h2>
+            </div>
+            
+            <div class="text-base md:text-lg text-slate-600 dark:text-slate-300 space-y-4 leading-relaxed text-justify lg:text-left">
+                <p>
+                    Desarrollador de software en formación en <strong>Tecnólogo en Análisis y Desarrollo de Software</strong> y un enfoque Full-Stack.
+                    Cuento con sólidos conocimientos en la creación de soluciones web robustas, desde el <strong>Backend</strong> con <strong>NestJS</strong> y <strong>PHP</strong>,
+                    hasta el <strong>Frontend</strong> con <strong>React.js</strong> y <strong>HTML5/CSS3</strong>.
+                </p>
+                <p>
+                    Tengo experiencia en el análisis y gestión de bases de datos relacionales, utilizando <strong>SQL</strong> y <strong>PostgreSQL (pgAdmin)</strong>.
+                    Además, poseo habilidades en diseño de interfaces (UI/UX) y prototipado de aplicaciones utilizando <strong>Figma</strong>, lo que
+                    me permite comprender y ejecutar un proyecto desde su concepción visual hasta su implementación funcional.
+                </p>
+                <p class="font-medium text-secondary">
+                    Busco un contrato de aprendizaje para aplicar mis habilidades, contribuir a proyectos desafiantes y consolidar mi
+                    experiencia en un entorno profesional, preferiblemente en modalidad de teletrabajo.
+                </p>
+            </div>
+            
+            <!-- Botones de Acción -->
+            <div class="flex flex-col sm:flex-row w-full sm:w-auto gap-3 pt-4">
+                <a href="https://wa.me/573177604449?text=Hola%20Andres,%20vi%20tu%20portafolio%20y%20me%20interesa%20tu%20perfil." target="_blank" class="w-full sm:w-auto px-6 py-3 bg-green-500 hover:bg-green-600 text-white rounded-lg font-medium transition-colors shadow-lg flex items-center justify-center gap-2">
+                    <i class="fab fa-whatsapp text-lg"></i> Contactar por WhatsApp
+                </a>
+                
+                <button onclick="sendEmail()" class="w-full sm:w-auto px-6 py-3 bg-secondary hover:bg-blue-600 text-white rounded-lg font-medium transition-colors shadow-lg flex items-center justify-center gap-2">
+                    <i class="fas fa-envelope text-lg"></i> Enviar Correo
+                </button>
+
+                <a href="https://github.com/AndresPuyol" target="_blank" class="w-full sm:w-auto px-6 py-3 border border-slate-300 dark:border-slate-600 hover:border-secondary hover:text-secondary rounded-lg font-medium transition-colors flex items-center justify-center gap-2 bg-white dark:bg-slate-800">
+                    <i class="fab fa-github text-lg"></i> Mi GitHub
+                </a>
+            </div>
+            
+            <div class="flex items-center justify-center lg:justify-start gap-4 text-sm text-slate-500 dark:text-slate-400 pt-2">
+                <span class="flex items-center gap-2"><i class="fas fa-map-marker-alt text-red-500"></i> Timana - Huila (Remoto)</span>
+            </div>
+        </div>
+
+        <!-- Columna Derecha: Foto y Gráfica (Orden 1 en móvil para que salga arriba) -->
+        <div class="lg:w-2/5 w-full flex flex-col items-center gap-8 order-1 lg:order-2">
+            
+            <!-- Foto -->
+            <div class="profile-image-container shadow-xl">
+                <img src="perfil.jpg" alt="Andres Peña" class="profile-image">
+            </div>
+
+            <!-- Gráfica -->
+            <div class="bg-white dark:bg-darkbg p-4 md:p-6 rounded-2xl shadow-xl w-full max-w-sm border border-slate-100 dark:border-slate-700">
+                <h3 class="text-center font-bold text-lg mb-2">Mi Perfil Técnico</h3>
+                <div class="chart-container">
+                    <canvas id="skillsChart"></canvas>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <!-- Skills Section -->
+    <section class="container mx-auto px-4 py-12">
+        <h3 class="text-2xl font-bold mb-8 text-center flex items-center justify-center gap-2">
+            <i class="fas fa-code text-secondary"></i> Stack Tecnológico
+        </h3>
+        
+        <!-- Filtros responsivos -->
+        <div class="flex flex-wrap justify-center gap-2 mb-8" id="skill-filters">
+            <button class="filter-btn active px-4 py-2 rounded-full text-xs md:text-sm font-medium bg-secondary text-white transition-all" data-filter="all">Todos</button>
+            <button class="filter-btn px-4 py-2 rounded-full text-xs md:text-sm font-medium bg-slate-200 dark:bg-slate-700 text-slate-600 dark:text-slate-300 hover:bg-slate-300 dark:hover:bg-slate-600 transition-all" data-filter="backend">Backend</button>
+            <button class="filter-btn px-4 py-2 rounded-full text-xs md:text-sm font-medium bg-slate-200 dark:bg-slate-700 text-slate-600 dark:text-slate-300 hover:bg-slate-300 dark:hover:bg-slate-600 transition-all" data-filter="frontend">Frontend</button>
+            <button class="filter-btn px-4 py-2 rounded-full text-xs md:text-sm font-medium bg-slate-200 dark:bg-slate-700 text-slate-600 dark:text-slate-300 hover:bg-slate-300 dark:hover:bg-slate-600 transition-all" data-filter="database">Bases de Datos</button>
+            <button class="filter-btn px-4 py-2 rounded-full text-xs md:text-sm font-medium bg-slate-200 dark:bg-slate-700 text-slate-600 dark:text-slate-300 hover:bg-slate-300 dark:hover:bg-slate-600 transition-all" data-filter="tools">Herramientas</button>
+        </div>
+
+        <!-- Grid Responsivo -->
+        <div class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-3 md:gap-4" id="skills-grid">
+            <!-- JS Populates this -->
+        </div>
+    </section>
+
+    <!-- Project Section -->
+    <section class="bg-white dark:bg-darkbg py-12 md:py-16 transition-colors">
+        <div class="container mx-auto px-4">
+            <h3 class="text-2xl md:text-3xl font-bold mb-8 md:mb-12 text-center">Proyecto Destacado</h3>
+            
+            <div class="max-w-4xl mx-auto bg-slate-50 dark:bg-slate-800 rounded-2xl shadow-lg overflow-hidden border border-slate-200 dark:border-slate-700">
+                <div class="p-6 md:p-8">
+                    <div class="flex flex-col md:flex-row justify-between items-start md:items-center mb-4 md:mb-6 gap-2">
+                        <div>
+                            <h4 class="text-xl md:text-2xl font-bold text-secondary">Agrotech</h4>
+                            <p class="text-sm text-slate-500 dark:text-slate-400">Proyecto Formativo SENA | Full-Stack</p>
+                        </div>
+                        <span class="px-3 py-1 bg-blue-100 text-blue-800 text-xs font-bold rounded-md">Agricultura Tech</span>
+                    </div>
+                    
+                    <p class="text-slate-600 dark:text-slate-300 mb-4 leading-relaxed text-sm md:text-base">
+                        Agrotech es un proyecto que integra tecnología en la agricultura para optimizar el monitoreo de cultivos y la gestión de recursos. 
+                        Incluye módulos para registro de cultivos, análisis de datos y una plataforma web intuitiva.
+                    </p>
+                    <p class="text-slate-600 dark:text-slate-300 mb-6 leading-relaxed text-xs md:text-sm bg-slate-100 dark:bg-slate-700 p-3 rounded-lg border-l-4 border-secondary">
+                        <strong>Mi Rol:</strong> Diseñé la interfaz en Figma, desarrollé el API REST con NestJS para gestionar los productos, construí el frontend con React para consumir los datos y administré la base de datos en pgAdmin.
+                    </p>
+
+                    <div class="grid md:grid-cols-2 gap-4 mb-8">
+                        <div class="bg-white dark:bg-primary p-4 rounded-lg border border-slate-200 dark:border-slate-600 shadow-sm">
+                            <h5 class="font-bold mb-2 flex items-center gap-2 text-sm"><i class="fas fa-server text-emerald-500"></i> Backend & DB</h5>
+                            <p class="text-xs text-slate-600 dark:text-slate-400">NestJS, Node.js, PostgreSQL (pgAdmin).</p>
+                        </div>
+                        <div class="bg-white dark:bg-primary p-4 rounded-lg border border-slate-200 dark:border-slate-600 shadow-sm">
+                            <h5 class="font-bold mb-2 flex items-center gap-2 text-sm"><i class="fas fa-desktop text-blue-500"></i> Frontend & UX</h5>
+                            <p class="text-xs text-slate-600 dark:text-slate-400">React.js, Figma, HTML5, CSS3.</p>
+                        </div>
+                    </div>
+
+                    <div class="border-t border-slate-200 dark:border-slate-700 pt-6">
+                        <a href="https://github.com/KERLINFIGUEROA0/ProyectoFormativo" target="_blank" class="w-full md:w-auto inline-flex justify-center items-center px-6 py-3 bg-slate-800 hover:bg-slate-700 text-white rounded-lg font-medium transition-colors shadow-md gap-2">
+                            <i class="fab fa-github"></i> Ver Repositorio del Proyecto
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Certifications Section -->
+    <section class="container mx-auto px-4 py-12 md:py-16">
+        <h3 class="text-2xl font-bold mb-10 text-center">Certificaciones & Logros</h3>
+        
+        <div class="grid sm:grid-cols-2 md:grid-cols-3 gap-6 max-w-5xl mx-auto">
+            
+            <!-- Certificado 1 -->
+            <div class="bg-white dark:bg-darkbg p-6 rounded-xl shadow-md border border-slate-100 dark:border-slate-700 flex flex-col justify-between hover:shadow-lg transition-shadow">
+                <div>
+                    <div class="flex items-center gap-3 mb-4">
+                        <div class="p-3 bg-blue-100 text-blue-600 rounded-lg">
+                            <i class="fas fa-mobile-alt text-xl"></i>
+                        </div>
+                        <h4 class="font-bold text-sm md:text-md text-slate-700 dark:text-slate-200">Gestión de Proyectos</h4>
+                    </div>
+                    <p class="text-xs md:text-sm text-slate-600 dark:text-slate-400 mb-2">Gestiona tus Proyectos a través del Smartphone</p>
+                    <p class="text-xs text-slate-400 mb-4"><i class="far fa-clock"></i> 40 Horas | Fundación Telefónica</p>
+                </div>
+                <!-- Enlace al PDF subido a Drive o GitHub -->
+                <a href="https://drive.google.com/file/d/1UtxO9giVtJ4XBtjp8u3lV-6Q3l_Cnnvi/view?usp=sharing" target="_blank" class="text-secondary text-sm font-semibold hover:underline mt-2 flex items-center gap-1">
+                    Ver Certificado <i class="fas fa-external-link-alt text-xs"></i>
+                </a>
+            </div>
+
+            <!-- Certificado 2 -->
+            <div class="bg-white dark:bg-darkbg p-6 rounded-xl shadow-md border border-slate-100 dark:border-slate-700 flex flex-col justify-between hover:shadow-lg transition-shadow">
+                <div>
+                    <div class="flex items-center gap-3 mb-4">
+                        <div class="p-3 bg-purple-100 text-purple-600 rounded-lg">
+                            <i class="fas fa-wifi text-xl"></i>
+                        </div>
+                        <h4 class="font-bold text-sm md:text-md text-slate-700 dark:text-slate-200">IoT</h4>
+                    </div>
+                    <p class="text-xs md:text-sm text-slate-600 dark:text-slate-400 mb-2">Principios básicos de Internet de las Cosas</p>
+                    <p class="text-xs text-slate-400 mb-4"><i class="far fa-clock"></i> 20 Horas | Fundación Telefónica</p>
+                </div>
+                <a href="https://drive.google.com/file/d/1_vIV_liQjuxY2VWHBB7DsF9K_4zk3qiL/view?usp=sharing" target="_blank" class="text-secondary text-sm font-semibold hover:underline mt-2 flex items-center gap-1">
+                    Ver Certificado <i class="fas fa-external-link-alt text-xs"></i>
+                </a>
+            </div>
+
+            <!-- Certificado 3 -->
+            <div class="bg-white dark:bg-darkbg p-6 rounded-xl shadow-md border border-slate-100 dark:border-slate-700 flex flex-col justify-between hover:shadow-lg transition-shadow">
+                <div>
+                    <div class="flex items-center gap-3 mb-4">
+                        <div class="p-3 bg-orange-100 text-orange-600 rounded-lg">
+                            <i class="fas fa-lightbulb text-xl"></i>
+                        </div>
+                        <h4 class="font-bold text-sm md:text-md text-slate-700 dark:text-slate-200">Emprendimiento</h4>
+                    </div>
+                    <p class="text-xs md:text-sm text-slate-600 dark:text-slate-400 mb-2">Habilidades de emprendimiento digital</p>
+                    <p class="text-xs text-slate-400 mb-4"><i class="far fa-clock"></i> 30 Horas | Fundación Telefónica</p>
+                </div>
+                <a href="https://drive.google.com/file/d/1Nj27ymczUc5NfQcusQhMT6bcmBOwlcvE/view?usp=sharing" target="_blank" class="text-secondary text-sm font-semibold hover:underline mt-2 flex items-center gap-1">
+                    Ver Certificado <i class="fas fa-external-link-alt text-xs"></i>
+                </a>
+            </div>
+
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="bg-white dark:bg-darkbg border-t border-slate-200 dark:border-slate-800 mt-auto py-8 transition-colors">
+        <div class="container mx-auto px-4 text-center">
+            <p class="text-slate-500 dark:text-slate-400 mb-4">¿Hablamos?</p>
+            <div class="flex justify-center gap-8 mb-6">
+                <a href="javascript:void(0)" onclick="sendEmail()" class="text-3xl text-slate-400 hover:text-secondary transition-colors"><i class="fas fa-envelope"></i></a>
+                <a href="https://wa.me/573177604449" class="text-3xl text-slate-400 hover:text-green-500 transition-colors"><i class="fab fa-whatsapp"></i></a>
+                <a href="https://github.com/AndresPuyol" class="text-3xl text-slate-400 hover:text-slate-800 dark:hover:text-white transition-colors"><i class="fab fa-github"></i></a>
+            </div>
+            <p class="text-xs text-slate-400">© 2025 Andres Orlando Peña Guzman.</p>
+        </div>
+    </footer>
+
+    <!-- Logic -->
+    <script>
+        const skillsData = [
+            { name: "NestJS", category: "backend", icon: "fa-server" },
+            { name: "Node.js", category: "backend", icon: "fa-node-js" },
+            { name: "PHP", category: "backend", icon: "fa-php" },
+            { name: "React.js", category: "frontend", icon: "fa-react" },
+            { name: "HTML5/CSS3", category: "frontend", icon: "fa-html5" },
+            { name: "JavaScript", category: "frontend", icon: "fa-js" },
+            { name: "PostgreSQL", category: "database", icon: "fa-database" },
+            { name: "MySQL", category: "database", icon: "fa-database" },
+            { name: "SQL", category: "database", icon: "fa-code" },
+            { name: "Figma", category: "tools", icon: "fa-figma" },
+            { name: "Git / GitHub", category: "tools", icon: "fa-github-alt" },
+            { name: "APIs REST", category: "backend", icon: "fa-network-wired" },
+        ];
+
+        const skillsGrid = document.getElementById('skills-grid');
+        
+        function renderSkills(filter = 'all') {
+            skillsGrid.innerHTML = '';
+            skillsData.forEach(skill => {
+                if (filter === 'all' || skill.category === filter) {
+                    const card = document.createElement('div');
+                    card.className = `skill-card bg-white dark:bg-slate-800 p-3 rounded-lg shadow-sm border border-slate-200 dark:border-slate-700 flex items-center gap-3 animate-fade-in`;
+                    let iconClass = skill.icon.includes('node') || skill.icon.includes('php') || skill.icon.includes('react') || skill.icon.includes('html') || skill.icon.includes('js') || skill.icon.includes('figma') || skill.icon.includes('github') ? 'fab' : 'fas';
+                    
+                    card.innerHTML = `
+                        <div class="w-8 h-8 rounded-full bg-slate-100 dark:bg-slate-700 flex items-center justify-center text-secondary shrink-0">
+                            <i class="${iconClass} ${skill.icon} text-base"></i>
+                        </div>
+                        <div>
+                            <h5 class="font-bold text-slate-700 dark:text-slate-200 text-xs md:text-sm leading-tight">${skill.name}</h5>
+                            <span class="text-[10px] text-slate-400 capitalize hidden sm:block">${skill.category}</span>
+                        </div>
+                    `;
+                    skillsGrid.appendChild(card);
+                }
+            });
+        }
+
+        renderSkills();
+
+        const filterButtons = document.querySelectorAll('.filter-btn');
+        filterButtons.forEach(btn => {
+            btn.addEventListener('click', () => {
+                filterButtons.forEach(b => {
+                    b.classList.remove('bg-secondary', 'text-white');
+                    b.classList.add('bg-slate-200', 'dark:bg-slate-700', 'text-slate-600', 'dark:text-slate-300');
+                });
+                btn.classList.remove('bg-slate-200', 'dark:bg-slate-700', 'text-slate-600', 'dark:text-slate-300');
+                btn.classList.add('bg-secondary', 'text-white');
+                renderSkills(btn.dataset.filter);
+            });
+        });
+
+        const themeToggle = document.getElementById('theme-toggle');
+        const html = document.documentElement;
+        
+        if (localStorage.getItem('theme') === 'dark' || (!('theme' in localStorage) && window.matchMedia('(prefers-color-scheme: dark)').matches)) {
+            html.classList.add('dark');
+        }
+
+        themeToggle.addEventListener('click', () => {
+            html.classList.toggle('dark');
+            if (html.classList.contains('dark')) {
+                localStorage.setItem('theme', 'dark');
+                updateChartColors(true);
+            } else {
+                localStorage.setItem('theme', 'light');
+                updateChartColors(false);
+            }
+        });
+
+        const ctx = document.getElementById('skillsChart').getContext('2d');
+        let skillsChart = new Chart(ctx, {
+            type: 'doughnut',
+            data: {
+                labels: ['Backend', 'Frontend', 'Bases de Datos', 'Diseño'],
+                datasets: [{
+                    data: [35, 30, 20, 15],
+                    backgroundColor: ['#3b82f6', '#10b981', '#6366f1', '#f59e0b'],
+                    borderWidth: 0,
+                    hoverOffset: 4
+                }]
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                plugins: {
+                    legend: {
+                        position: 'bottom',
+                        labels: {
+                            usePointStyle: true,
+                            padding: 20,
+                            color: html.classList.contains('dark') ? '#cbd5e1' : '#475569',
+                            font: { family: "'Inter', sans-serif", size: 11 }
+                        }
+                    },
+                    tooltip: {
+                        enabled: true
+                    }
+                },
+                cutout: '65%',
+            }
+        });
+
+        function updateChartColors(isDark) {
+            skillsChart.options.plugins.legend.labels.color = isDark ? '#cbd5e1' : '#475569';
+            skillsChart.update();
+        }
+        
+        updateChartColors(html.classList.contains('dark'));
+
+        function sendEmail() {
+            const email = "penaguzmanandres@gmail.com";
+            const subject = encodeURIComponent("Interés en tu Perfil - Contrato de Aprendizaje");
+            const body = encodeURIComponent("Hola Andres,\n\nVimos tu portafolio y nos gustaría contactarte para una oportunidad de contrato de aprendizaje.\n\nQuedamos atentos a tu respuesta.");
+            
+            const gmailLink = `https://mail.google.com/mail/?view=cm&fs=1&to=${email}&su=${subject}&body=${body}`;
+            const mailtoLink = `mailto:${email}?subject=${subject}&body=${body}`;
+
+            if (/Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent)) {
+                window.location.href = mailtoLink;
+            } else {
+                window.open(gmailLink, '_blank');
+                setTimeout(() => { window.location.href = mailtoLink; }, 500);
+            }
+        }
+    </script>
+</body>
+</html>
+
+
+
+
