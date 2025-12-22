@@ -1,0 +1,168 @@
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700&display=swap');
+
+/* Utility for pausing animation */
+.pause {
+    animation-play-state: paused;
+}
+
+body {
+    font-family: 'Inter', sans-serif;
+    overflow-x: hidden;
+    -webkit-font-smoothing: antialiased;
+}
+
+/* Glassmorphism */
+.glass {
+    background: rgba(255, 255, 255, 0.65);
+    backdrop-filter: blur(12px);
+    -webkit-backdrop-filter: blur(12px);
+    border: 1px solid rgba(255, 255, 255, 0.5);
+    box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+}
+
+.dark .glass {
+    background: rgba(30, 41, 59, 0.65);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.3);
+}
+
+/* Tira del Carrusel */
+.carousel-strip {
+    width: 100%;
+    overflow: hidden;
+    position: relative;
+    padding: 3rem 0;
+    background: rgba(255, 255, 255, 0.3);
+    backdrop-filter: blur(8px);
+    border-top: 1px solid rgba(200, 200, 200, 0.2);
+    border-bottom: 1px solid rgba(200, 200, 200, 0.2);
+    margin: 2rem 0;
+}
+
+.dark .carousel-strip {
+    background: rgba(15, 23, 42, 0.4);
+    border-color: rgba(255, 255, 255, 0.05);
+}
+
+.carousel-track {
+    display: flex;
+    width: max-content;
+    gap: 3rem;
+    /* Espacio entre iconos */
+}
+
+@media (min-width: 768px) {
+    .carousel-track {
+        gap: 5rem;
+    }
+}
+
+/* Tarjeta de Habilidad en Carrusel (Estática, sin hover interactivo) */
+.tech-card {
+    min-width: 100px;
+    height: 100px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    border-radius: 1.5rem;
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    background: rgba(255, 255, 255, 0.15);
+}
+
+.dark .tech-card {
+    background: rgba(30, 41, 59, 0.3);
+    border-color: rgba(255, 255, 255, 0.05);
+}
+
+@media (min-width: 768px) {
+    .tech-card {
+        min-width: 150px;
+        height: 150px;
+    }
+}
+
+/* Foto de perfil */
+.profile-image-container {
+    position: relative;
+    width: 180px;
+    height: 180px;
+    border-radius: 50%;
+    padding: 4px;
+    background: linear-gradient(to right, #3b82f6, #10b981);
+    margin: 0 auto;
+    box-shadow: 0 10px 25px rgba(0, 0, 0, 0.2);
+    transition: all 0.5s ease;
+}
+
+.profile-image-container:hover {
+    transform: scale(1.05) translateY(-5px);
+    box-shadow: 0 20px 30px rgba(59, 130, 246, 0.3);
+    border-color: #3b82f6;
+}
+
+@media (min-width: 1024px) {
+    .profile-image-container {
+        width: 250px;
+        height: 250px;
+    }
+}
+
+.profile-image {
+    width: 100%;
+    height: 100%;
+    border-radius: 50%;
+    object-fit: cover;
+    border: 4px solid white;
+}
+
+.dark .profile-image {
+    border: 4px solid #1e293b;
+}
+
+/* Scroll Top Button */
+#scrollTopBtn {
+    display: none;
+    position: fixed;
+    bottom: 20px;
+    right: 20px;
+    z-index: 99;
+    transition: opacity 0.3s;
+}
+
+/* Liquid Fill Hover Effect */
+.liquid-hover {
+    position: relative;
+    overflow: hidden;
+    z-index: 1;
+    transition: all 0.3s ease;
+}
+
+.liquid-hover::before {
+    content: "";
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    width: 100%;
+    height: 0%;
+    background: #3b82f6;
+    /* Secondary color */
+    transition: all 0.4s ease-in-out;
+    z-index: -1;
+    border-radius: 0.75rem;
+}
+
+.liquid-hover:hover::before {
+    height: 100%;
+}
+
+.liquid-hover:hover h5,
+.liquid-hover:hover span,
+.liquid-hover:hover i {
+    color: white !important;
+    transition: color 0.3s ease;
+}
+
+.liquid-hover:hover .icon-bg {
+    background: rgba(255, 255, 255, 0.2) !important;
+}
