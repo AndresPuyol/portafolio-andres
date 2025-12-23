@@ -7,18 +7,78 @@ AOS.init({
 });
 
 const skillsData = [
-    { name: "NestJS", category: "backend", icon: "fa-server" },
-    { name: "Node.js", category: "backend", icon: "fa-node-js" },
-    { name: "PHP", category: "backend", icon: "fa-php" },
-    { name: "React.js", category: "frontend", icon: "fa-react" },
-    { name: "HTML5/CSS3", category: "frontend", icon: "fa-html5" },
-    { name: "JavaScript", category: "frontend", icon: "fa-js" },
-    { name: "PostgreSQL", category: "database", icon: "fa-database" },
-    { name: "MySQL", category: "database", icon: "fa-database" },
-    { name: "SQL", category: "database", icon: "fa-code" },
-    { name: "Figma", category: "tools", icon: "fa-figma" },
-    { name: "Git / GitHub", category: "tools", icon: "fa-github-alt" },
-    { name: "APIs REST", category: "backend", icon: "fa-network-wired" },
+    {
+        name: "NestJS",
+        category: "backend",
+        icon: "fa-server",
+        description: "Framework progresivo de Node.js para construir aplicaciones del lado del servidor eficientes y escalables. Lo utilizo para crear APIs RESTful robustas, aprovechando su arquitectura modular y su integración con TypeScript."
+    },
+    {
+        name: "Node.js",
+        category: "backend",
+        icon: "fa-node-js",
+        description: "Entorno de ejecución para JavaScript construido con el motor V8 de Chrome. Es la base de mi desarrollo backend, permitiéndome manejar lógica asíncrona y construir servidores de alto rendimiento."
+    },
+    {
+        name: "PHP",
+        category: "backend",
+        icon: "fa-php",
+        description: "Lenguaje de script de código abierto muy popular, especialmente adecuado para el desarrollo web. Tengo experiencia manteniendo y creando sistemas dinámicos con este lenguaje clásico."
+    },
+    {
+        name: "React.js",
+        category: "frontend",
+        icon: "fa-react",
+        description: "Biblioteca de JavaScript para construir interfaces de usuario. La utilizo para crear SPAs (Single Page Applications) interactivas, gestionando el estado y los componentes de manera eficiente."
+    },
+    {
+        name: "HTML5/CSS3",
+        category: "frontend",
+        icon: "fa-html5",
+        description: "Los pilares fundamentales de la web. Me aseguro de escribir HTML semántico y accesible, y utilizo CSS3 (junto con Tailwind) para crear diseños modernos, responsivos y con animaciones fluidas."
+    },
+    {
+        name: "JavaScript",
+        category: "frontend",
+        icon: "fa-js",
+        description: "El lenguaje de programación de la web. Lo domino tanto en el frontend (manipulación del DOM, lógica de UI) como en el backend (Node.js), con un fuerte enfoque en ES6+."
+    },
+    {
+        name: "PostgreSQL",
+        category: "database",
+        icon: "fa-database",
+        description: "Sistema de gestión de bases de datos relacional objeto potente y de código abierto. Es mi elección principal para datos estructurados complejos y aplicaciones que requieren fiabilidad."
+    },
+    {
+        name: "MySQL",
+        category: "database",
+        icon: "fa-database",
+        description: "El sistema de gestión de bases de datos relacional de código abierto más popular. Lo he utilizado en diversos proyectos para almacenar y recuperar datos de manera eficiente."
+    },
+    {
+        name: "SQL",
+        category: "database",
+        icon: "fa-code",
+        description: "Lenguaje de consulta estructurado estándar. Poseo habilidades sólidas para diseñar esquemas, escribir consultas complejas, procedimientos almacenados y optimizar el rendimiento de la BD."
+    },
+    {
+        name: "Figma",
+        category: "tools",
+        icon: "fa-figma",
+        description: "Herramienta de diseño de interfaces colaborativa. La utilizo para prototipar mis aplicaciones, diseñar sistemas de componentes y asegurar una buena experiencia de usuario (UX) antes de escribir código."
+    },
+    {
+        name: "Git / GitHub",
+        category: "tools",
+        icon: "fa-github-alt",
+        description: "Control de versiones esencial para cualquier equipo. Uso Git para el seguimiento de cambios y ramas, y GitHub para la colaboración, revisión de código y despliegue (CI/CD)."
+    },
+    {
+        name: "APIs REST",
+        category: "backend",
+        icon: "fa-network-wired",
+        description: "Arquitectura estándar para la comunicación entre sistemas. Diseño e implemento APIs que siguen los principios REST, asegurando una integración fluida entre el frontend y el backend."
+    },
 ];
 
 // 1. BIG CAROUSEL LOGIC - FIXED NO HOVER EFFECT & FULL WIDTH
@@ -51,10 +111,14 @@ function renderSkills(filter = 'all') {
     skillsData.forEach(skill => {
         if (filter === 'all' || skill.category === filter) {
             const card = document.createElement('div');
-            card.className = `skill-card liquid-hover bg-white dark:bg-slate-800 p-4 rounded-xl shadow-sm border border-slate-100 dark:border-slate-700 flex items-center gap-4 transition-all duration-300 hover:shadow-lg hover:-translate-y-2 cursor-default group`;
+            // Added cursor-pointer and onclick
+            card.className = `skill-card liquid-hover bg-white dark:bg-slate-800 p-4 rounded-xl shadow-sm border border-slate-100 dark:border-slate-700 flex items-center gap-4 transition-all duration-300 hover:shadow-lg hover:-translate-y-2 active:scale-95 active:shadow-inner cursor-pointer group`;
             // Fade in animation manually
             card.style.animation = `fadeIn 0.5s ease forwards ${delay}s`;
             card.style.opacity = '0';
+
+            // Add click event to open modal
+            card.onclick = () => openModal(skill);
 
             let iconClass = skill.icon.includes('node') || skill.icon.includes('php') || skill.icon.includes('react') || skill.icon.includes('html') || skill.icon.includes('js') || skill.icon.includes('figma') || skill.icon.includes('github') ? 'fab' : 'fas';
 
@@ -241,4 +305,70 @@ window.onscroll = function () {
 
 function scrollToTop() {
     window.scrollTo({ top: 0, behavior: 'smooth' });
+}
+
+// 5. MODAL LOGIC
+const modal = document.getElementById('skill-modal');
+const modalBackdrop = document.getElementById('modal-backdrop');
+const modalPanel = document.getElementById('modal-panel');
+const modalTitle = document.getElementById('modal-title');
+const modalDescription = document.getElementById('modal-description');
+const modalIcon = document.getElementById('modal-icon');
+const modalIconBg = document.getElementById('modal-icon-bg');
+
+function openModal(skill) {
+    if (!modal) return;
+
+    // Set Content
+    modalTitle.textContent = skill.name;
+    modalDescription.textContent = skill.description;
+
+    // Update Icon
+    let iconClass = skill.icon.includes('node') || skill.icon.includes('php') || skill.icon.includes('react') || skill.icon.includes('html') || skill.icon.includes('js') || skill.icon.includes('figma') || skill.icon.includes('github') ? 'fab' : 'fas';
+    modalIcon.className = `${iconClass} ${skill.icon} text-2xl text-blue-600 dark:text-blue-400`;
+
+    // Show Modal
+    modal.classList.remove('hidden');
+    // Small delay to allow display:block to apply before transition
+    setTimeout(() => {
+        modalBackdrop.classList.remove('opacity-0');
+        modalPanel.classList.remove('opacity-0', 'translate-y-4', 'sm:translate-y-0', 'sm:scale-95');
+        modalPanel.classList.add('opacity-100', 'translate-y-0', 'sm:scale-100');
+    }, 10);
+
+    // Prevent body scroll
+    document.body.style.overflow = 'hidden';
+}
+
+function closeModal() {
+    if (!modal) return;
+
+    // Hide transition
+    modalBackdrop.classList.add('opacity-0');
+    modalPanel.classList.add('opacity-0', 'translate-y-4', 'sm:translate-y-0', 'sm:scale-95');
+    modalPanel.classList.remove('opacity-100', 'translate-y-0', 'sm:scale-100');
+
+    // Wait for transition to finish before hiding element
+    setTimeout(() => {
+        modal.classList.add('hidden');
+        document.body.style.overflow = 'auto'; // Restore scroll
+    }, 300);
+}
+
+// Close on backdrop click
+if (modal) {
+    modal.addEventListener('click', (e) => {
+        // If the click is on the modal container itself (the backdrop area wrapping the panel)
+        // or the backdrop div directly
+        if (e.target === modal || e.target === modalBackdrop) {
+            closeModal();
+        }
+    });
+
+    // Close on Escape key
+    document.addEventListener('keydown', (e) => {
+        if (e.key === 'Escape' && !modal.classList.contains('hidden')) {
+            closeModal();
+        }
+    });
 }
