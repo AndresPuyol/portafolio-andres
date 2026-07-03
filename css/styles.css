@@ -166,3 +166,31 @@ body {
 .liquid-hover:hover .icon-bg {
     background: rgba(255, 255, 255, 0.2) !important;
 }
+
+/* Proximity Effect Styles */
+.stage-wrapper {
+    position: relative;
+    cursor: crosshair;
+}
+
+.stage-wrapper .grid {
+    position: relative;
+    width: 100%;
+    min-height: 450px;
+    pointer-events: none;
+}
+
+.stage-wrapper .skill-card {
+    position: absolute;
+    transform-origin: center center;
+    pointer-events: auto;
+    will-change: scale;
+    transition: none;
+}
+
+.stage-label {
+    font-family: 'Fraktion Mono', monospace;
+    font-size: 0.54rem;
+    color: var(--surface25);
+    pointer-events: none;
+}

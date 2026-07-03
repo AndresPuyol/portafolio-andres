@@ -108,33 +108,38 @@ const skillsGrid = document.getElementById('skills-grid');
 function renderSkills(filter = 'all') {
     skillsGrid.innerHTML = '';
     let delay = 0;
-    skillsData.forEach(skill => {
-        if (filter === 'all' || skill.category === filter) {
-            const card = document.createElement('div');
-            // Added cursor-pointer and onclick
-            card.className = `skill-card liquid-hover bg-white dark:bg-slate-800 p-4 rounded-xl shadow-sm border border-slate-100 dark:border-slate-700 flex items-center gap-4 transition-all duration-300 hover:shadow-lg hover:-translate-y-2 active:scale-95 active:shadow-inner cursor-pointer group`;
-            // Fade in animation manually
-            card.style.animation = `fadeIn 0.5s ease forwards ${delay}s`;
-            card.style.opacity = '0';
+    const filteredSkills = skillsData.filter(skill => filter === 'all' || skill.category === filter);
+    
+    filteredSkills.forEach((skill, index) => {
+        const card = document.createElement('div');
+        // Added cursor-pointer and onclick
+        card.className = `skill-card liquid-hover bg-white dark:bg-slate-800 p-4 rounded-xl shadow-sm border border-slate-100 dark:border-slate-700 flex items-center gap-4 transition-all duration-300 hover:shadow-lg hover:-translate-y-2 active:scale-95 active:shadow-inner cursor-pointer group`;
+        // Fade in animation manually
+        card.style.animation = `fadeIn 0.5s ease forwards ${delay}s`;
+        card.style.opacity = '0';
 
-            // Add click event to open modal
-            card.onclick = () => openModal(skill);
+        // Add click event to open modal
+        card.onclick = () => openModal(skill);
 
-            let iconClass = skill.icon.includes('node') || skill.icon.includes('php') || skill.icon.includes('react') || skill.icon.includes('html') || skill.icon.includes('js') || skill.icon.includes('figma') || skill.icon.includes('github') ? 'fab' : 'fas';
+        let iconClass = skill.icon.includes('node') || skill.icon.includes('php') || skill.icon.includes('react') || skill.icon.includes('html') || skill.icon.includes('js') || skill.icon.includes('figma') || skill.icon.includes('github') ? 'fab' : 'fas';
 
-            card.innerHTML = `
-                <div class="icon-bg w-10 h-10 rounded-full bg-slate-100 dark:bg-slate-700 flex items-center justify-center text-secondary shrink-0 transition-colors duration-300">
-                    <i class="${iconClass} ${skill.icon} text-xl"></i>
-                </div>
-                <div>
-                    <h5 class="font-bold text-slate-700 dark:text-slate-200 text-sm leading-tight transition-colors duration-300">${skill.name}</h5>
-                    <span class="text-xs text-slate-500 dark:text-slate-400 capitalize hidden sm:block transition-colors duration-300">${skill.category}</span>
-                </div>
-            `;
-            skillsGrid.appendChild(card);
-            delay += 0.05;
-        }
+        card.innerHTML = `
+            <div class="icon-bg w-10 h-10 rounded-full bg-slate-100 dark:bg-slate-700 flex items-center justify-center text-secondary shrink-0 transition-colors duration-300">
+                <i class="${iconClass} ${skill.icon} text-xl"></i>
+            </div>
+            <div>
+                <h5 class="font-bold text-slate-700 dark:text-slate-200 text-sm leading-tight transition-colors duration-300">${skill.name}</h5>
+                <span class="text-xs text-slate-500 dark:text-slate-400 capitalize hidden sm:block transition-colors duration-300">${skill.category}</span>
+            </div>
+        `;
+        skillsGrid.appendChild(card);
+        delay += 0.05;
     });
+    
+    // Re-initialize proximity effect after re-rendering skills
+    if (typeof initProximityEffect === 'function') {
+        setTimeout(initProximityEffect, 100);
+    }
 }
 
 const styleSheet = document.createElement("style");
@@ -372,3 +377,96 @@ if (modal) {
         }
     });
 }
+
+// ============================================
+// PROXIMITY SCALE EFFECT FOR SKILLS GRID
+// ============================================
+const stage = document.getElementById('stage');
+let radius = 200,
+    maxScale = 1.8,
+    dur = 0.35;
+let proximityInitialized = false;
+
+// Initialize proximity effect after skills are rendered
+function initProximityEffect() {
+    // Prevent multiple initializations of event listeners
+    if (proximityInitialized) {
+        // Just reposition the cards if already initialized
+        const cards = gsap.utils.toArray('.skill-card');
+        cards.forEach((card, index) => {
+            const x = 10 + (index % 5) * 18;
+            const y = 15 + Math.floor(index / 5) * 22;
+            const r = (index % 3 - 1) * 3;
+            
+            card.style.setProperty('--x', x + '%');
+            card.style.setProperty('--y', y + '%');
+            card.style.setProperty('--r', r + 'deg');
+            card.style.left = card.style.getPropertyValue('--x');
+            card.style.top = card.style.getPropertyValue('--y');
+            card.style.rotate = card.style.getPropertyValue('--r');
+        });
+        
+        // Reset all scales when filter changes
+        cards.forEach(card => {
+            gsap.set(card, { scale: 1 });
+        });
+        return;
+    }
+    
+    const cards = gsap.utils.toArray('.skill-card');
+    
+    // Set initial scattered positions using CSS custom properties
+    cards.forEach((card, index) => {
+        const x = 10 + (index % 5) * 18; // 10%, 28%, 46%, 64%, 82%
+        const y = 15 + Math.floor(index / 5) * 22; // 15%, 37%, 59%, 81%
+        const r = (index % 3 - 1) * 3; // -3deg, 0deg, 3deg
+        
+        card.style.setProperty('--x', x + '%');
+        card.style.setProperty('--y', y + '%');
+        card.style.setProperty('--r', r + 'deg');
+        
+        // Apply initial position and rotation
+        card.style.left = card.style.getPropertyValue('--x');
+        card.style.top = card.style.getPropertyValue('--y');
+        card.style.rotate = card.style.getPropertyValue('--r');
+        card.style.position = 'absolute';
+        card.style.transformOrigin = 'center center';
+    });
+
+    stage.addEventListener('mousemove', function (e) {
+        const mx = e.clientX;
+        const my = e.clientY;
+        
+        cards.forEach(function (card) {
+            const rect = card.getBoundingClientRect();
+            const d = Math.hypot(
+                mx - (rect.left + rect.width / 2),
+                my - (rect.top + rect.height / 2)
+            );
+            const p = gsap.utils.clamp(0, 1, gsap.utils.mapRange(0, radius, 1, 0, d));
+            
+            gsap.to(card, {
+                scale: 1 + (maxScale - 1) * p,
+                duration: dur,
+                overwrite: true,
+                ease: 'power2.out'
+            });
+        });
+    });
+
+    stage.addEventListener('mouseleave', function () {
+        cards.forEach(function (card) {
+            gsap.to(card, {
+                scale: 1,
+                duration: dur * 2,
+                overwrite: true,
+                ease: 'power2.out'
+            });
+        });
+    });
+    
+    proximityInitialized = true;
+}
+
+// Initialize after a short delay to ensure DOM is ready
+setTimeout(initProximityEffect, 500);

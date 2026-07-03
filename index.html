@@ -13,6 +13,8 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <!-- AOS Animation Library -->
     <link href="https://unpkg.com/aos@2.3.1/dist/aos.css" rel="stylesheet">
+    <!-- GSAP for Proximity Effect -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js"></script>
 
     <script src="js/tailwind.config.js"></script>
     <link rel="stylesheet" href="css/styles.css">
@@ -225,8 +227,12 @@
                 data-filter="tools">Herramientas</button>
         </div>
 
-        <div class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-4" id="skills-grid">
-            <!-- JS Populates this -->
+        <!-- Stage container for proximity effect -->
+        <div class="stage-wrapper relative w-full overflow-hidden rounded-2xl bg-white/50 dark:bg-slate-800/30 backdrop-blur-sm border border-slate-200 dark:border-slate-700 p-8 min-h-[500px]" id="stage">
+            <div class="grid" id="skills-grid">
+                <!-- JS Populates this -->
+            </div>
+            <span class="stage-label absolute bottom-4 right-4 text-xs font-mono text-slate-400 pointer-events-none">mueve el cursor sobre la grilla</span>
         </div>
     </section>
 
@@ -450,6 +456,9 @@
 
     <!-- AOS JS -->
     <script src="https://unpkg.com/aos@2.3.1/dist/aos.js"></script>
+
+    <!-- GSAP for proximity effect -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js"></script>
 
     <!-- Logic -->
     <script src="js/script.js"></script>
